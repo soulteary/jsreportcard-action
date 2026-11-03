@@ -1,0 +1,105 @@
+{
+  "configuration": {
+    "mode": "typed",
+    "config_mode": "builtin",
+    "node": "node",
+    "tool_dir": "/home/runner/work/jsreportcard-action/jsreportcard-action/tools",
+    "include": [
+      "."
+    ],
+    "exclude": [
+      ".git",
+      "node_modules",
+      "dist",
+      "build",
+      "coverage",
+      "vendor",
+      "generated"
+    ],
+    "tsconfigs": [
+      "tsconfig.json"
+    ],
+    "environment": "universal",
+    "complexity_limit": 10,
+    "timeout_seconds": 120
+  },
+  "analysis_profile": "d48c43d3395e43e36485e87663a5a89b2ffd56b66be0070f9bd3c9cc2fe1acca",
+  "schema_version": 1,
+  "scoring_version": 1,
+  "mode": "typed",
+  "status": "passed",
+  "analysis_complete": true,
+  "grade": "A+",
+  "score": 100,
+  "files": 1,
+  "new_errors": 0,
+  "checks": [
+    {
+      "files": [
+        "src/index.ts"
+      ],
+      "node_version": "v22.23.4",
+      "tool": "eslint",
+      "version": "9.39.1; typescript-eslint 8.46.2",
+      "status": "passed",
+      "analyzed": 1,
+      "total": 1,
+      "diagnostics": [],
+      "metrics": {
+        "suppressed_diagnostics": 0
+      }
+    },
+    {
+      "files": [
+        "src/index.ts"
+      ],
+      "node_version": "v22.23.4",
+      "tool": "prettier",
+      "version": "3.6.2",
+      "status": "passed",
+      "analyzed": 1,
+      "total": 1,
+      "diagnostics": []
+    },
+    {
+      "files": [
+        "src/index.ts"
+      ],
+      "configuration_files": [
+        "/home/runner/work/jsreportcard-action/jsreportcard-action/testdata/clean/tsconfig.json"
+      ],
+      "node_version": "v22.23.4",
+      "tool": "typescript",
+      "version": "5.9.3",
+      "status": "passed",
+      "analyzed": 1,
+      "total": 1,
+      "diagnostics": [],
+      "metrics": {
+        "covered_files": 1,
+        "program_files": 1,
+        "projects": 1,
+        "selected_files": 1,
+        "strict_projects": 1
+      }
+    },
+    {
+      "files": [
+        "src/index.ts"
+      ],
+      "configuration_files": [
+        "/home/runner/work/jsreportcard-action/jsreportcard-action/testdata/clean/tsconfig.json"
+      ],
+      "node_version": "v22.23.4",
+      "tool": "typed-eslint",
+      "version": "9.39.1; typescript-eslint 8.46.2",
+      "status": "passed",
+      "analyzed": 1,
+      "total": 1,
+      "diagnostics": [],
+      "metrics": {
+        "suppressed_diagnostics": 0
+      }
+    }
+  ]
+}
