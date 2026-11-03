@@ -1,0 +1,5 @@
+/dist/
+/jsreportcard-cli
+**/node_modules/
+**/.jsreportcard/
+*.tsbuildinfo
