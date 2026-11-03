@@ -49,9 +49,13 @@ function builtinConfig(typed, projects) {
     languageOptions:{parser:tse.parser, parserOptions, ecmaVersion:'latest',sourceType:'module',globals:env},
     plugins:{'@typescript-eslint':tse.plugin,react}, rules}];
   settings.push({files:['**/*.cjs','**/*.cts'],languageOptions:{sourceType:'commonjs'}});
-  if (!typed) settings.push({files:['**/*.ts','**/*.tsx','**/*.mts','**/*.cts'],rules:{
-    'no-undef':'off','no-unused-vars':'off',
-    '@typescript-eslint/no-unused-vars':['warn',{argsIgnorePattern:'^_'}]}});
+  if (!typed) {
+    // TypeScript overloads/merging are valid syntax, not duplicate JS declarations.
+    const compatibility=Object.fromEntries(Object.entries(tse.configs.eslintRecommended.rules).filter(([,level])=>level==='off'));
+    settings.push({files:['**/*.ts','**/*.tsx','**/*.mts','**/*.cts'],rules:{
+      ...compatibility,'no-unused-vars':'off',
+      '@typescript-eslint/no-unused-vars':['warn',{argsIgnorePattern:'^_'}]}});
+  }
   return settings;
 }
 async function lint(typed=false) {

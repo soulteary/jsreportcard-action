@@ -24,6 +24,8 @@ try{
  let r=check(0,['--mode','typed']);assert.equal(r.grade,'A+');assert.equal(r.analysis_complete,true);
  assert.equal(r.checks.find(c=>c.tool==='typescript').metrics.covered_files,1);
  assert.ok(!fs.existsSync(path.join(root,'src/index.js')));
+ clear();write('src/index.ts','export class Box {\n  value(input: string): string;\n  value(input: number): number;\n  value(input: string | number): string | number {\n    return input;\n  }\n}\n');config();
+ r=check(0,['--mode','typed']);assert.ok(!r.checks.flatMap(c=>c.diagnostics).some(d=>d.rule==='no-dupe-class-members'));
  clear();write('src/index.js','console.log(missing);\n');
  r=check(1);assert.equal(r.new_errors,1);assert.equal(r.score,59);write('baseline.json',JSON.stringify(r));
  check(0,['--baseline','baseline.json']);
