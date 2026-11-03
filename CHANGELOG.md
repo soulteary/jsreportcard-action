@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+
+- Raise total Go statement coverage to 97.75% with deterministic unit tests for success, failure and boundary cases.
+- Enforce a 95% coverage floor across all production Go packages in CI, retaining real-analyzer integration checks.
+
 ## 1.1.0
 
 - Add `badge_label` / `--badge-label` to select JS/TS, JS or TS badge labels without changing analysis or baseline compatibility.

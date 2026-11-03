@@ -17,7 +17,8 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '22'
-      - run: go test -race ./...
+      - name: Unit tests and 95% coverage gate
+        run: scripts/test-coverage.sh
       - run: go vet ./...
       - run: test -z "$(gofmt -l cmd internal)"
       - run: bash -n scripts/*.sh
@@ -43,3 +44,9 @@ jobs:
           name: jsreportcard-example
           path: .github/jsreportcard-example/
           include-hidden-files: true
+      - name: Upload unit-test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-coverage
+          path: coverage.out
+          if-no-files-found: error
