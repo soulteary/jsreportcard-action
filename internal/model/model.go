@@ -16,15 +16,17 @@ type Diagnostic struct {
 	New          bool   `json:"new"`
 }
 type Check struct {
-	NodeVersion string             `json:"node_version,omitempty"`
-	Tool        string             `json:"tool"`
-	Version     string             `json:"version"`
-	Status      string             `json:"status"`
-	Error       string             `json:"error,omitempty"`
-	Analyzed    int                `json:"analyzed"`
-	Total       int                `json:"total"`
-	Diagnostics []Diagnostic       `json:"diagnostics"`
-	Metrics     map[string]float64 `json:"metrics,omitempty"`
+	Files              []string           `json:"files,omitempty"`
+	ConfigurationFiles []string           `json:"configuration_files,omitempty"`
+	NodeVersion        string             `json:"node_version,omitempty"`
+	Tool               string             `json:"tool"`
+	Version            string             `json:"version"`
+	Status             string             `json:"status"`
+	Error              string             `json:"error,omitempty"`
+	Analyzed           int                `json:"analyzed"`
+	Total              int                `json:"total"`
+	Diagnostics        []Diagnostic       `json:"diagnostics"`
+	Metrics            map[string]float64 `json:"metrics,omitempty"`
 }
 type Result struct {
 	Configuration  config.Config `json:"configuration"`
