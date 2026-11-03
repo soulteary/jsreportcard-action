@@ -1,9 +1,6 @@
 # JavaScript / TypeScript Report Card
 
-[![Go Report Card](.github/goreportcard.svg)](.github/goreportcard-report.md)
-
-[![JS/TS Report Card example](.github/jsreportcard-example/badge.svg)](.github/jsreportcard-example/report.md)
-[![CI](https://github.com/soulteary/jsreportcard-action/actions/workflows/ci.yml/badge.svg)](https://github.com/soulteary/jsreportcard-action/actions/workflows/ci.yml)
+[![JS/TS Report Card example](.github/jsreportcard-example/badge.svg)](.github/jsreportcard-example/report.md) [![Go Report Card](.github/goreportcard.svg)](.github/goreportcard-report.md) [![CI](https://github.com/soulteary/jsreportcard-action/actions/workflows/ci.yml/badge.svg)](https://github.com/soulteary/jsreportcard-action/actions/workflows/ci.yml)
 
 A **Go CLI + Node.js analyzer + GitHub Action** for local JavaScript and TypeScript
 quality reports. Uses ESLint, typescript-eslint, Prettier and the TypeScript
