@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Capitalize report badge labels and refresh the README badge example.
+- Capitalize displayed analysis modes and incomplete status without changing machine-readable report fields.
+
 ## 1.0.0
 
 - Add the Go CLI, isolated Node toolkit and Ubuntu GitHub Action.
