@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -50,7 +51,15 @@ func Load(path string) (Config, error) {
 			return c, e
 		}
 		defer f.Close()
-		d := json.NewDecoder(f)
+		data, e := io.ReadAll(f)
+		if e != nil {
+			return c, e
+		}
+		data = bytes.TrimSpace(data)
+		if len(data) == 0 || data[0] != '{' {
+			return c, fmt.Errorf("configuration must be a JSON object")
+		}
+		d := json.NewDecoder(bytes.NewReader(data))
 		d.DisallowUnknownFields()
 		if e = d.Decode(&c); e != nil {
 			return c, e

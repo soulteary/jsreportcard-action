@@ -9,7 +9,9 @@ for os in linux darwin windows; do
     dir="$(mktemp -d)"
     CGO_ENABLED=0 GOOS="$os" GOARCH="$arch" go build -trimpath -ldflags "-s -w -X main.version=$version" -o "$dir/$name" ./cmd/jsreportcard-cli
     cp LICENSE "$dir/"
-    tar -czf "dist/jsreportcard_${version}_${os}_${arch}.tar.gz" -C "$dir" "$name" LICENSE
+    mkdir -p "$dir/tools"
+    cp tools/package.json tools/package-lock.json "$dir/tools/"
+    tar -czf "dist/jsreportcard_${version}_${os}_${arch}.tar.gz" -C "$dir" "$name" LICENSE tools
     rm -rf "$dir"
   done
 done

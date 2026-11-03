@@ -1,0 +1,127 @@
+name: JavaScript TypeScript Report Card
+description: Analyze JavaScript and TypeScript with ESLint, Prettier and TypeScript; generate quality reports and SVG badges.
+author: soulteary
+branding:
+  icon: award
+  color: blue
+inputs:
+  directory:
+    description: Project directory relative to the workspace.
+    required: false
+    default: '.'
+  mode:
+    description: Analysis mode (standard or typed).
+    required: false
+    default: standard
+  node_version:
+    description: Node.js version used by the analyzer toolkit.
+    required: false
+    default: '22'
+  config_mode:
+    description: builtin (isolated rules) or project (executes trusted project configuration).
+    required: false
+    default: builtin
+  include:
+    description: Optional comma-separated source directories/files relative to directory.
+    required: false
+    default: ''
+  tsconfigs:
+    description: Optional comma-separated tsconfig paths for typed analysis.
+    required: false
+    default: ''
+  config:
+    description: Optional JSON configuration relative to the project directory.
+    required: false
+    default: ''
+  output_dir:
+    description: Output directory relative to the project directory.
+    required: false
+    default: .jsreportcard
+  baseline:
+    description: Optional previous report.json relative to the project directory.
+    required: false
+    default: ''
+  fail_on:
+    description: Policy (none, errors, new-errors, findings).
+    required: false
+    default: new-errors
+  threshold:
+    description: Minimum score; 0 disables score gate.
+    required: false
+    default: '0'
+  commit:
+    description: Commit generated reports on branch push events only.
+    required: false
+    default: 'false'
+outputs:
+  status:
+    description: passed, findings, or incomplete.
+    value: ${{ steps.analyze.outputs.status }}
+  grade:
+    description: Overall grade, or incomplete.
+    value: ${{ steps.analyze.outputs.grade }}
+  score:
+    description: Score, or empty for incomplete analysis.
+    value: ${{ steps.analyze.outputs.score }}
+  analysis_complete:
+    description: Whether all required analyzers completed.
+    value: ${{ steps.analyze.outputs.analysis_complete }}
+  new_errors:
+    description: Number of new error diagnostics.
+    value: ${{ steps.analyze.outputs.new_errors }}
+  report:
+    description: Absolute Markdown report path.
+    value: ${{ steps.analyze.outputs.report }}
+  json:
+    description: Absolute JSON report path.
+    value: ${{ steps.analyze.outputs.json }}
+  badge:
+    description: Absolute SVG badge path.
+    value: ${{ steps.analyze.outputs.badge }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      with:
+        go-version-file: ${{ github.action_path }}/go.mod
+        cache: false
+    - name: Set up Node.js
+      uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+      with:
+        node-version: ${{ inputs.node_version }}
+    - name: Install isolated analyzers
+      id: tools
+      shell: bash
+      run: '"$GITHUB_ACTION_PATH/scripts/install-tools.sh"'
+    - name: Build CLI
+      shell: bash
+      run: |
+        cd "$GITHUB_ACTION_PATH"
+        go build -trimpath -o "$RUNNER_TEMP/jsreportcard-cli" ./cmd/jsreportcard-cli
+    - name: Analyze
+      id: analyze
+      shell: bash
+      env:
+        INPUT_DIRECTORY: ${{ inputs.directory }}
+        INPUT_MODE: ${{ inputs.mode }}
+        INPUT_CONFIG_MODE: ${{ inputs.config_mode }}
+        INPUT_INCLUDE: ${{ inputs.include }}
+        INPUT_TSCONFIGS: ${{ inputs.tsconfigs }}
+        TOOL_DIRECTORY: ${{ steps.tools.outputs.directory }}
+        INPUT_CONFIG: ${{ inputs.config }}
+        INPUT_OUTPUT_DIR: ${{ inputs.output_dir }}
+        INPUT_BASELINE: ${{ inputs.baseline }}
+        INPUT_FAIL_ON: ${{ inputs.fail_on }}
+        INPUT_THRESHOLD: ${{ inputs.threshold }}
+      run: '"$GITHUB_ACTION_PATH/scripts/analyze.sh"'
+    - name: Commit reports
+      if: inputs.commit == 'true'
+      shell: bash
+      env:
+        REPORT_JSON: ${{ steps.analyze.outputs.json }}
+      run: '"$GITHUB_ACTION_PATH/scripts/commit.sh"'
+    - name: Enforce policy
+      shell: bash
+      env:
+        RESULT_CODE: ${{ steps.analyze.outputs.exit_code }}
+      run: 'exit "$RESULT_CODE"'

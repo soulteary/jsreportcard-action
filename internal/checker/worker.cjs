@@ -129,13 +129,22 @@ function collectProjects() {
 function types() {
   const {ts,projects,configurations}=collectProjects();result.version=ts.version;
   let strict=0;
+  const programFiles=new Set();
   const environmentalCodes=new Set([2307,2688,5058,6053,6059,6305]);
   for(const parsed of configurations) {
     if(!parsed.fileNames.length) continue;
     if(parsed.options.strict) strict++;
     // Do not call emit/build: analysis never writes JS, declarations or tsbuildinfo.
-    const program=ts.createProgram({rootNames:parsed.fileNames,options:parsed.options,projectReferences:parsed.projectReferences});
-    for(const source of program.getSourceFiles()) mark(source.fileName);
+    const program=ts.createProgram({rootNames:parsed.fileNames,options:{...parsed.options,noEmit:true},projectReferences:parsed.projectReferences});
+    for(const source of program.getSourceFiles()) {
+      const rel=relative(source.fileName);
+      if(rel===null || !selected.has(rel)) continue;
+      programFiles.add(rel);
+      const js=/\.(?:[cm]?js|jsx)$/.test(source.fileName);
+      const directive=source.checkJsDirective;
+      const enabled=directive ? directive.enabled : (!js || !!parsed.options.checkJs);
+      if(!parsed.options.noCheck && enabled) mark(source.fileName);
+    }
     for(const d of ts.getPreEmitDiagnostics(program)) {
       const message=ts.flattenDiagnosticMessageText(d.messageText,'\n');
       if(!d.file || environmentalCodes.has(d.code)) {result.status='error';result.error=`TypeScript configuration/dependency error TS${d.code}: ${message}`;}
@@ -152,8 +161,8 @@ function types() {
   }
   result.analyzed=result.files.length;
   const missing=files.filter(f=>!result.files.includes(f));
-  if(missing.length) {result.status='error';result.error=`Selected files missing from TypeScript programs: ${missing.join(', ')}`;}
-  result.metrics={projects:projects.length,strict_projects:strict,selected_files:files.length,covered_files:result.files.length};
+  if(missing.length) {result.status='error';result.error=`Selected files not type-checked (missing from programs, checkJs disabled or ts-nocheck): ${missing.join(', ')}`;}
+  result.metrics={projects:projects.length,strict_projects:strict,selected_files:files.length,covered_files:result.files.length,program_files:programFiles.size};
 }
 (async()=>{
   try {
@@ -165,5 +174,7 @@ function types() {
     if(result.status!=='error' && result.analyzed!==result.total) {result.status='error';result.error='Selected files were not completely analyzed';}
     if(result.status!=='error' && result.diagnostics.length) result.status='findings';
   } catch(error) {result.status='error';result.error=error.stack || String(error);}
-  process.stdout.write(JSON.stringify(result));
+  // TypeScript project services may keep watcher handles alive. This worker
+  // serves exactly one request; exit only after the JSON has been flushed.
+  process.stdout.write(JSON.stringify(result), () => process.exit(0));
 })();

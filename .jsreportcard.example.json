@@ -1,0 +1,12 @@
+{
+  "mode": "standard",
+  "config_mode": "builtin",
+  "node": "node",
+  "tool_dir": "",
+  "include": ["src"],
+  "exclude": [".git", "node_modules", "dist", "build", "coverage", "vendor", "generated"],
+  "tsconfigs": ["tsconfig.json"],
+  "environment": "universal",
+  "complexity_limit": 10,
+  "timeout_seconds": 120
+}

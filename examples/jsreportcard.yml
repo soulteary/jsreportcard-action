@@ -1,0 +1,26 @@
+name: JS/TS Report Card
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  report:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      # Prepare project dependencies explicitly for typed analysis.
+      - run: npm ci --ignore-scripts
+      - uses: soulteary/jsreportcard-action@v1
+        with:
+          mode: typed
+          config_mode: builtin
+          include: src
+          tsconfigs: tsconfig.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jsreportcard
+          path: .jsreportcard/
+          include-hidden-files: true

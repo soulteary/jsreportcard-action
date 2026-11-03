@@ -102,11 +102,22 @@ func Run(args []string, out, errout io.Writer, version string) int {
 	if c.ToolDir == "" {
 		executable, _ := os.Executable()
 		c.ToolDir = filepath.Join(filepath.Dir(executable), "tools")
-		if _, err := os.Stat(filepath.Join(abs, "tools", "package.json")); err == nil {
-			c.ToolDir = filepath.Join(abs, "tools")
-		}
 	} else {
 		c.ToolDir = resolve(c.ToolDir)
+	}
+
+	for i, include := range c.Include {
+		c.Include[i] = strings.TrimSpace(include)
+		p := resolve(c.Include[i])
+		if _, err := project.Relative(abs, p); err != nil {
+			return fail(err)
+		}
+		if _, err := os.Stat(p); err != nil {
+			return fail(fmt.Errorf("invalid include %q: %w", include, err))
+		}
+	}
+	for i, value := range c.TSConfigs {
+		c.TSConfigs[i] = strings.TrimSpace(value)
 	}
 	files, e := project.Discover(abs, c.Exclude)
 	if e != nil {
@@ -152,7 +163,13 @@ func Run(args []string, out, errout io.Writer, version string) int {
 	}
 	r.Profile = signature
 	prior := map[string]int{}
-	if *baseline != "" {
+	currentComplete := true
+	for _, check := range r.Checks {
+		if check.Status == "error" {
+			currentComplete = false
+		}
+	}
+	if *baseline != "" && currentComplete {
 		data, e := os.ReadFile(resolve(*baseline))
 		if e != nil {
 			return fail(e)
