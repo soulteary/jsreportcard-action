@@ -22,13 +22,13 @@
 
 ### gocyclo
 
-- `internal/report/render_test.go`
-  - Line 13: cyclomatic complexity 20 for function TestReportFilesAndEscaping
 - `internal/app/app.go`
   - Line 21: cyclomatic complexity 69 for function Run
   - Line 225: cyclomatic complexity 16 for function profileID
 - `internal/report/score.go`
   - Line 15: cyclomatic complexity 28 for function Finalize
+- `internal/report/render_test.go`
+  - Line 13: cyclomatic complexity 20 for function TestReportFilesAndEscaping
 
 ---
 
