@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add `badge_label` / `--badge-label` to select JS/TS, JS or TS badge labels without changing analysis or baseline compatibility.
+
 ## 1.0.1
 
 - Capitalize report badge labels and refresh the README badge example.

@@ -59,6 +59,7 @@ must run those steps explicitly in an appropriate trusted workflow. See the
 
 - `directory`: project root relative to workspace; default `.`.
 - `mode`: `standard` (default) or `typed`.
+- `badge_label`: `js-ts` (default), `js`, or `ts`; display label only.
 - `config_mode`: `builtin` (default) or `project`.
 - `node_version`: analyzer runtime; default `22`.
 - `include`: optional comma-separated source directories/files; defaults to JSON
@@ -77,6 +78,48 @@ Outputs: `status`, `grade`, `score`, `analysis_complete`, `new_errors`, `report`
 Invalid invocations can fail before producing reports. Action mode/config-mode
 inputs override JSON values. Pin an exact version or commit for repeatability.
 
+### Badge labels
+
+Choose `badge_label: js-ts`, `badge_label: js`, or `badge_label: ts` to display
+**JS/TS Report**, **JS Report**, or **TS Report**. Analysis mode and incomplete
+status remain visible. This option only changes the label; it does not filter
+source files, change scores or invalidate baselines. The selected value is
+recorded as `badge_label` in `report.json`.
+
+For example, use `badge_label: ts` with your TypeScript project:
+
+```yaml
+- uses: soulteary/jsreportcard-action@main
+  with:
+    mode: typed
+    badge_label: ts
+    include: src
+```
+
+To show separate JS and TS grades, run the Action twice with the corresponding
+source directories and distinct output directories. For a repository with
+`javascript/` and `typescript/` directories:
+
+```yaml
+- uses: soulteary/jsreportcard-action@main
+  with:
+    badge_label: js
+    include: javascript
+    output_dir: .js-report
+- uses: soulteary/jsreportcard-action@main
+  with:
+    mode: typed
+    badge_label: ts
+    include: typescript
+    tsconfigs: typescript/tsconfig.json
+    output_dir: .ts-report
+```
+
+Prepare TypeScript dependencies as described above. Commit or publish both SVG
+files to display them in your README. Each grade reflects that run's `include`
+scope; selecting a label alone does not produce a language-specific grade.
+This option is currently available on `main`; it will be included in the next release.
+
 ## CLI
 
 Build with Go 1.23+, or extract a prebuilt release archive. The archive includes
@@ -86,7 +129,7 @@ next to the binary before use:
 ```sh
 npm ci --prefix tools --ignore-scripts
 ./jsreportcard-cli --directory /path/to/project --include src
-./jsreportcard-cli --directory /path/to/project --mode typed --include src
+./jsreportcard-cli --directory /path/to/project --mode typed --include src --badge-label ts
 ```
 
 From a source checkout:

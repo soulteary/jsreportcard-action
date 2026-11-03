@@ -13,6 +13,10 @@ inputs:
     description: Analysis mode (standard or typed).
     required: false
     default: standard
+  badge_label:
+    description: Badge display label (js-ts, js or ts); does not change analysis scope.
+    required: false
+    default: js-ts
   node_version:
     description: Node.js version used by the analyzer toolkit.
     required: false
@@ -104,6 +108,7 @@ runs:
       env:
         INPUT_DIRECTORY: ${{ inputs.directory }}
         INPUT_MODE: ${{ inputs.mode }}
+        INPUT_BADGE_LABEL: ${{ inputs.badge_label }}
         INPUT_CONFIG_MODE: ${{ inputs.config_mode }}
         INPUT_INCLUDE: ${{ inputs.include }}
         INPUT_TSCONFIGS: ${{ inputs.tsconfigs }}

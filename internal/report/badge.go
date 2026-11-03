@@ -52,6 +52,12 @@ func badgeTextWidth(text string) int {
 // rounded clipping, a subtle highlight and a shadow for readable small text.
 func SVG(r model.Result) string {
 	label := "JS/TS Report"
+	switch r.BadgeLabel {
+	case "js":
+		label = "JS Report"
+	case "ts":
+		label = "TS Report"
+	}
 	if r.Mode != "standard" {
 		label += " (" + badgeTitle(r.Mode) + ")"
 	}

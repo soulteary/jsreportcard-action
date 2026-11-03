@@ -29,6 +29,7 @@ type Check struct {
 	Metrics            map[string]float64 `json:"metrics,omitempty"`
 }
 type Result struct {
+	BadgeLabel     string        `json:"badge_label,omitempty"`
 	Configuration  config.Config `json:"configuration"`
 	Profile        string        `json:"analysis_profile"`
 	SchemaVersion  int           `json:"schema_version"`

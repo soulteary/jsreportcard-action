@@ -31,8 +31,11 @@ jobs:
         with:
           directory: testdata/clean
           mode: typed
+          badge_label: ts
           include: src
           fail_on: findings
+      - name: Verify selected badge label
+        run: grep -q '<title>TS Report (Typed):' testdata/clean/.jsreportcard/badge.svg
       - name: Generate README badge
         run: scripts/update-badge-example.sh
       - uses: actions/upload-artifact@v4

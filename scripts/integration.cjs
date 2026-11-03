@@ -23,6 +23,15 @@ try{
  write('src/index.ts',clean);config();
  let r=check(0,['--mode','typed']);assert.equal(r.grade,'A+');assert.equal(r.analysis_complete,true);
  assert.equal(r.checks.find(c=>c.tool==='typescript').metrics.covered_files,1);
+ const combinedProfile=r.analysis_profile;
+ for(const [label,text] of [['js','JS Report'],['ts','TS Report']]){
+  const selected=check(0,['--mode','typed','--badge-label',label,'--baseline','.jsreportcard/report.json']);
+  assert.equal(selected.analysis_profile,combinedProfile);
+  assert.equal(selected.grade,'A+');
+  assert.equal(selected.badge_label,label);
+  assert.ok(fs.readFileSync(path.join(root,'.jsreportcard/badge.svg'),'utf8').includes(`<title>${text} (Typed): A+`));
+ }
+
  assert.ok(!fs.existsSync(path.join(root,'src/index.js')));
  clear();write('src/index.ts','export class Box {\n  value(input: string): string;\n  value(input: number): number;\n  value(input: string | number): string | number {\n    return input;\n  }\n}\n');config();
  r=check(0,['--mode','typed']);assert.ok(!r.checks.flatMap(c=>c.diagnostics).some(d=>d.rule==='no-dupe-class-members'));

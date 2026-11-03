@@ -24,6 +24,7 @@ func Run(args []string, out, errout io.Writer, version string) int {
 	root := fs.String("directory", ".", "project root")
 	cfg := fs.String("config", "", "JSON config relative to project root")
 	mode := fs.String("mode", "", "standard or typed")
+	badgeLabel := fs.String("badge-label", "js-ts", "badge label: js-ts, js or ts (display only)")
 	configMode := fs.String("config-mode", "", "builtin or project (project executes trusted JS configuration)")
 	node := fs.String("node", "", "Node executable")
 	toolDir := fs.String("tool-dir", "", "installed toolkit directory")
@@ -51,6 +52,11 @@ func Run(args []string, out, errout io.Writer, version string) int {
 	}
 	if math.IsNaN(*threshold) || math.IsInf(*threshold, 0) || *threshold < 0 || *threshold > 100 {
 		return fail(fmt.Errorf("threshold must be 0..100"))
+	}
+	switch *badgeLabel {
+	case "js-ts", "js", "ts":
+	default:
+		return fail(fmt.Errorf("badge-label must be js-ts, js or ts"))
 	}
 	switch *policy {
 	case "none", "errors", "new-errors", "findings":
@@ -140,7 +146,7 @@ func Run(args []string, out, errout io.Writer, version string) int {
 	if len(selected) == 0 {
 		return fail(fmt.Errorf("no JS/TS source files selected"))
 	}
-	r := model.Result{Configuration: c, SchemaVersion: 1, ScoringVersion: 1, Mode: c.Mode, Files: len(selected), Checks: []model.Check{}}
+	r := model.Result{BadgeLabel: *badgeLabel, Configuration: c, SchemaVersion: 1, ScoringVersion: 1, Mode: c.Mode, Files: len(selected), Checks: []model.Check{}}
 	for _, tool := range []string{"eslint", "prettier"} {
 		r.Checks = append(r.Checks, checker.Run(abs, selected, c, tool))
 	}

@@ -12,7 +12,7 @@ output.relative_to(root)
 PY
 args=(--directory "$GITHUB_WORKSPACE/$INPUT_DIRECTORY" --mode "$INPUT_MODE"
   --tool-dir "$TOOL_DIRECTORY" --config-mode "$INPUT_CONFIG_MODE" --output-dir "$INPUT_OUTPUT_DIR"
-  --fail-on "$INPUT_FAIL_ON" --threshold "$INPUT_THRESHOLD")
+  --badge-label "${INPUT_BADGE_LABEL:-js-ts}" --fail-on "$INPUT_FAIL_ON" --threshold "$INPUT_THRESHOLD")
 [[ -z "$INPUT_INCLUDE" ]] || args+=(--include "$INPUT_INCLUDE")
 [[ -z "$INPUT_TSCONFIGS" ]] || args+=(--tsconfigs "$INPUT_TSCONFIGS")
 [[ -z "$INPUT_CONFIG" ]] || args+=(--config "$INPUT_CONFIG")
