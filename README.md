@@ -89,7 +89,7 @@ recorded as `badge_label` in `report.json`.
 For example, use `badge_label: ts` with your TypeScript project:
 
 ```yaml
-- uses: soulteary/jsreportcard-action@main
+- uses: soulteary/jsreportcard-action@v1
   with:
     mode: typed
     badge_label: ts
@@ -101,12 +101,12 @@ source directories and distinct output directories. For a repository with
 `javascript/` and `typescript/` directories:
 
 ```yaml
-- uses: soulteary/jsreportcard-action@main
+- uses: soulteary/jsreportcard-action@v1
   with:
     badge_label: js
     include: javascript
     output_dir: .js-report
-- uses: soulteary/jsreportcard-action@main
+- uses: soulteary/jsreportcard-action@v1
   with:
     mode: typed
     badge_label: ts
@@ -118,7 +118,7 @@ source directories and distinct output directories. For a repository with
 Prepare TypeScript dependencies as described above. Commit or publish both SVG
 files to display them in your README. Each grade reflects that run's `include`
 scope; selecting a label alone does not produce a language-specific grade.
-This option is currently available on `main`; it will be included in the next release.
+The `badge_label` option is available from v1.1.0.
 
 ## CLI
 

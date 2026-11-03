@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.0
 
 - Add `badge_label` / `--badge-label` to select JS/TS, JS or TS badge labels without changing analysis or baseline compatibility.
 
