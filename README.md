@@ -167,7 +167,7 @@ Analysis depth and configuration source are independent:
   trusted. This is environment separation, not a sandbox for hostile configs.
 
 Project dependencies and analyzer dependencies are separate. Initial validation
-uses ESLint 9.39.1, typescript-eslint 8.46.2, TypeScript 5.9.3 and Prettier 3.6.2.
+uses ESLint 9.39.5, typescript-eslint 8.74.0, TypeScript 6.0.3 and Prettier 3.10.1.
 The lockfile fixes transitive toolkit dependencies. Project typed mode requires
 its installed TypeScript version to match the toolkit version; mismatches fail
 explicitly. Legacy `.eslintrc` configurations are not automatically migrated.
